@@ -1,0 +1,4 @@
+*.pyc
+dist/
+unimarkdown.egg-info/
+unimarkdown/__pycache__
