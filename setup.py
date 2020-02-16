@@ -85,6 +85,7 @@ setup(
     },
     install_requires=[
         'unilatin',
+        'markdown',
         ],
     include_package_data=True,
     license='MIT',
