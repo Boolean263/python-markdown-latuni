@@ -37,6 +37,7 @@ class LatUni(markdown.extensions.Extension):
                 "style": ["sans",
                             'Style to use for bold and italic text, '
                             'sans (default) or serif'],
+                # Not currently used:
                 "textwidth": [72,
                             'Text wrap width (default:72)'],
         }
