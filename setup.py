@@ -15,7 +15,7 @@ from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
 
-from unimarkdown import __version__
+from mdx_latuni import __version__
 
 with open("README.md", "r") as f:
     long_description = f.read()
@@ -65,7 +65,7 @@ class UploadCommand(Command):
 
 # Where the magic happens:
 setup(
-    name="unimarkdown",
+    name="python-markdown-latuni",
     version=__version__,
     description="Format markdown to unicode bold/italic/etc text",
     long_description=long_description,
@@ -73,18 +73,18 @@ setup(
     author="David Perry",
     author_email="boolean263@protonmail.com",
     python_requires=">=3.6.0",
-    url='https://github.com/Boolean263/unimarkdown',
+    url='https://github.com/Boolean263/python-markdown-latuni',
     # If the package has several modules:
     #packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
     # If the package is a single module:
-    py_modules=['unimarkdown'],
+    py_modules=['mdx_latuni'],
     entry_points={
         'console_scripts': [
-            'unimarkdown=unimarkdown.__main__:main',
+            'md2latuni=mdx_latuni.__main__:main',
             ],
     },
     install_requires=[
-        'unilatin',
+        'latuni',
         'markdown',
         ],
     include_package_data=True,

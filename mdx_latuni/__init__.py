@@ -4,7 +4,7 @@ VERSION = (0, 0, 1)
 __version__ = '.'.join(map(str, VERSION))
 
 __all__ = [
-        'UniMarkdown',
+        'LatUni',
         'makeExtension',
         ]
 
@@ -12,7 +12,7 @@ import re
 from xml.etree.ElementTree import Comment, ElementTree, QName, ProcessingInstruction
 
 import markdown
-import unilatin
+import latuni
 
 RE_WS = re.compile('\s+')
 
@@ -20,7 +20,7 @@ RE_WS = re.compile('\s+')
 tags = {
         'bold': ('b', 'strong'),
         'ital': ('i', 'em'),
-        'mono': ('code'),
+        'mono': ('code',),
         }
 
 # Tags that should be ignored and whose content should be skipped
@@ -30,7 +30,7 @@ header_tags = ('h1', 'h2', 'h3', 'h4', 'h5', 'h6')
 code_holder_tags = ('p', 'pre')
 para_tags = ('p', 'div')
 
-class UniMarkdown(markdown.extensions.Extension):
+class LatUni(markdown.extensions.Extension):
 
     def __init__(self, **kwargs):
         self.config = {
@@ -48,9 +48,9 @@ class UniMarkdown(markdown.extensions.Extension):
         """
         md.registerExtension(self)
         self.md = md
-        md.output_formats["unilatin"] = self.to_unilatin
+        md.output_formats["latuni"] = self.to_latuni
 
-    def to_unilatin(self, element):
+    def to_latuni(self, element):
         root = ElementTree(element).getroot()
         data = []
         write = data.append
@@ -58,10 +58,10 @@ class UniMarkdown(markdown.extensions.Extension):
         return "".join(data)
 
     def _serialize(self, elem, write):
-        style = unilatin.STYLE_SERIF if self.config["style"] == "serif" else unilatin.STYLE_SANS
-        bold = unilatin.FACE_BOLD   # shorthand
-        ital = unilatin.FACE_ITAL   # shorthand
-        mono = unilatin.STYLE_MONO  # shorthand
+        style = latuni.STYLE_SERIF if self.getConfig("style") == "serif" else latuni.STYLE_SANS
+        bold = latuni.FACE_BOLD   # shorthand
+        ital = latuni.FACE_ITAL   # shorthand
+        mono = latuni.STYLE_MONO  # shorthand
 
         tag = elem.tag
         text = elem.text or ""
@@ -73,7 +73,7 @@ class UniMarkdown(markdown.extensions.Extension):
         if tag.lower() in code_holder_tags and len(elem) == 1 and not text and elem[0].tag.lower() == 'code':
             # Code blocks of the two different types.
             # Whitespace matters here.
-            write(unilatin.fullwidth(elem[0].text))
+            write(latuni.fullwidth(elem[0].text))
             write(tail+"\n")
             return
 
@@ -100,7 +100,7 @@ class UniMarkdown(markdown.extensions.Extension):
             for e in elem:
                 self._serialize(e, s.append)
             for i in s:
-                write(unilatin.format(style|bold, i))
+                write(latuni.format(style|bold, i))
             write(tail)
             return
         elif tag.lower() in tags['ital']:
@@ -109,7 +109,7 @@ class UniMarkdown(markdown.extensions.Extension):
             for e in elem:
                 self._serialize(e, s.append)
             for i in s:
-                write(unilatin.format(style|ital, i))
+                write(latuni.format(style|ital, i))
             write(tail)
             return
         elif tag.lower() in tags['mono']:
@@ -118,7 +118,7 @@ class UniMarkdown(markdown.extensions.Extension):
             for e in elem:
                 self._serialize(e, s.append)
             for i in s:
-                write(unilatin.format(unilatin.STYLE_MONO, i))
+                write(latuni.format(latuni.STYLE_MONO, i))
             write(tail)
             return
         else:
@@ -133,13 +133,13 @@ class UniMarkdown(markdown.extensions.Extension):
         write(tail)
 
 def makeExtension(*args, **kwargs):
-    return UniMarkdown(*args, **kwargs)
+    return LatUni(*args, **kwargs)
 
 
 # Self-test routine
 if __name__ == '__main__':
     test_text = """
-# This is a test of unimarkdown
+# This is a test of LatUni
 
 This text *is italicized* to some degree.
 
@@ -171,11 +171,11 @@ Thank you.
     print(markdown.markdown(test_text))
 
     md = markdown.Markdown(
-            extensions=[UniMarkdown()],
-            output_format="unilatin")
+            extensions=[LatUni()],
+            output_format="latuni")
     md.stripTopLevelTags = False
     out = md.convert(test_text)
-    print("Unilatin formatted:\n"+out)
+    print("LatUni formatted:\n"+out)
 
 #
 # Editor modelines - http://www.wireshark.org/tools/modelines.html

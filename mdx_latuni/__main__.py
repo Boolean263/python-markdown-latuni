@@ -6,18 +6,18 @@ import argparse
 import unicodedata
 
 import markdown
-import unilatin
+from mdx_latuni import LatUni
 
 ##
 ## Main Program
 ##
 def main():
-    parser = argparse.ArgumentParser(description="Convert markdown to unilatin")
+    parser = argparse.ArgumentParser(description="Convert markdown to latuni")
     parser.add_argument("--sans",
-            action="store_const", const=unilatin.STYLE_SANS, dest="style",
+            action="store_const", const="sans", dest="style",
             help="Use sans-serif variant for bold/italic (default)")
     parser.add_argument("--serif",
-            action="store_const", const=unilatin.STYLE_SERIF, dest="style",
+            action="store_const", const="serif", dest="style",
             help="Use serif variant for bold/italic")
     parser.add_argument("infile", metavar="INFILE",
             nargs="?",
@@ -31,12 +31,18 @@ def main():
             help="Write formatted text to OUTFILE (default:stdout)")
 
     args = parser.parse_args()
-    args.style = args.style or unilatin.STYLE_SANS
+    args.style = args.style or "sans"
 
     text = args.infile.read()
-    text = unicodedata.normalize('NFKD', text);
-    flags = args.style|unilatin.FACE_BOLD
-    args.outfile.write(unilatin.format(flags, text))
+    text = unicodedata.normalize('NFD', text);
+
+    md = markdown.Markdown(
+            extensions=[LatUni(style=args.style)],
+            output_format="latuni")
+    md.stripTopLevelTags = False
+    out = md.convert(text)
+
+    args.outfile.write(out)
 
 if __name__ == '__main__':
     sys.exit(main() or 0)
