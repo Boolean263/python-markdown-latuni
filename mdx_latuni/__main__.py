@@ -42,7 +42,8 @@ def main():
     md.stripTopLevelTags = False
     out = md.convert(text)
 
-    args.outfile.write(out)
+    # the markdown module trims trailing whitespace
+    args.outfile.write(out+"\n")
 
 if __name__ == '__main__':
     sys.exit(main() or 0)

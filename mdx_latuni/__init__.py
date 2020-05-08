@@ -85,14 +85,14 @@ class LatUni(markdown.extensions.Extension):
 
         if tag.lower() in header_tags:
             # For now just write the text with a newline after
-            write(text+"\n")
+            write(text+"\n\n")
             write(tail)
             return
         elif tag.lower() in para_tags:
             write(text)
             for e in elem:
                 self._serialize(e, write)
-            write("\n")
+            write("\n\n")
             write(tail)
             return
         elif tag.lower() in tags['bold']:
