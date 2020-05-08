@@ -19,8 +19,10 @@ RE_WS = re.compile('\s+')
 # Tags that should be formatted in a particular way
 tags = {
         'bold': ('b', 'strong'),
-        'ital': ('i', 'em'),
-        'mono': ('code',),
+        'ital': ('i', 'em', 'cite'),
+        'mono': ('code', 'samp', 'kbd', 'var'),
+        'und': ('ins', 'u'),
+        'stk': ('del', 'strike', 's'),
         }
 
 # Tags that should be ignored and whose content should be skipped
@@ -63,6 +65,7 @@ class LatUni(markdown.extensions.Extension):
         bold = latuni.FACE_BOLD   # shorthand
         ital = latuni.FACE_ITAL   # shorthand
         mono = latuni.STYLE_MONO  # shorthand
+        textwidth = self.getConfig("textwidth")
 
         tag = elem.tag
         text = elem.text or ""
@@ -101,7 +104,7 @@ class LatUni(markdown.extensions.Extension):
             for e in elem:
                 self._serialize(e, s.append)
             for i in s:
-                write(latuni.format(style|bold, i))
+                write(latuni.style(style|bold, i))
             write(tail)
             return
         elif tag.lower() in tags['ital']:
@@ -110,7 +113,7 @@ class LatUni(markdown.extensions.Extension):
             for e in elem:
                 self._serialize(e, s.append)
             for i in s:
-                write(latuni.format(style|ital, i))
+                write(latuni.style(style|ital, i))
             write(tail)
             return
         elif tag.lower() in tags['mono']:
@@ -119,9 +122,33 @@ class LatUni(markdown.extensions.Extension):
             for e in elem:
                 self._serialize(e, s.append)
             for i in s:
-                write(latuni.format(latuni.STYLE_MONO, i))
+                write(latuni.style(latuni.STYLE_MONO, i))
             write(tail)
             return
+        elif tag.lower() in tags['und']:
+            s = []
+            if text: s.append(text)
+            for e in elem:
+                self._serialize(e, s.append)
+            for i in s:
+                write(latuni.format(latuni.FMT_UNDERLINE, i))
+            write(tail)
+            return
+        elif tag.lower() in tags['stk']:
+            s = []
+            if text: s.append(text)
+            for e in elem:
+                self._serialize(e, s.append)
+            for i in s:
+                write(latuni.format(latuni.FMT_STRIKEOUT, i))
+            write(tail)
+            return
+        elif tag.lower() == 'hr':
+            write(text)
+            write(chr(0x2500) * ((textwidth or 50)-2))
+            write("\n")
+        elif tag.lower() == 'hr':
+            write(text+"\n\n")
         else:
             # Tags we haven't handled above, including non-tags and QNames
             pass
@@ -163,6 +190,13 @@ code Block
 Markdown considers
 lines without blank lines
 to be a single paragraph
+
+----
+
+I don't think markdown has <ins>underline</ins> tags,
+so let's <s>test them manually</s>. They aren't converted...
+
+----
 
 Thank you.
 """

@@ -12,7 +12,7 @@ As much as anything else, this was to help me learn python package/module distri
 
 ## Standalone Script
 
-Once you install this module, you'll have a script in your path called `md2latuni`. It reads markdown text from the given input file (or standard input by default) and writes the unicode-formatted output to the given output file (or standard output).
+Once you install this module, you'll have a script in your path called `md2latuni`. It reads markdown text from the given input file (or standard input by default) and writes the unicode-formatted output to the given output file (or standard output). It automatically loads the `smarty` markdown extension to give the right unicode glyphs for single and double quotees. You can add other markdown extensions to the list as well; see `md2latuni --help`.
 
 ## Markdown Plugin
 
@@ -28,10 +28,11 @@ The style "sans" is default; "serif" is also available. This just tells latuni w
 
 ## Future Plans
 
-* Maybe extra newlines between paragraphs, to keep parity with markdown itself
 * Text-wrapping
 * Distinguishing headers
 * Handling bullets
+* Handling hyperlinks
+* Handling blockquotes
 
 ## Have Fun
 
