@@ -104,7 +104,7 @@ class LatUni(markdown.extensions.Extension):
             for e in elem:
                 self._serialize(e, s.append)
             for i in s:
-                write(latuni.style(style|bold, i))
+                write(latuni.format(style|bold, i))
             write(tail)
             return
         elif tag.lower() in tags['ital']:
@@ -113,7 +113,7 @@ class LatUni(markdown.extensions.Extension):
             for e in elem:
                 self._serialize(e, s.append)
             for i in s:
-                write(latuni.style(style|ital, i))
+                write(latuni.format(style|ital, i))
             write(tail)
             return
         elif tag.lower() in tags['mono']:
@@ -122,7 +122,7 @@ class LatUni(markdown.extensions.Extension):
             for e in elem:
                 self._serialize(e, s.append)
             for i in s:
-                write(latuni.style(latuni.STYLE_MONO, i))
+                write(latuni.format(latuni.STYLE_MONO, i))
             write(tail)
             return
         elif tag.lower() in tags['und']:
