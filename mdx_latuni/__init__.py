@@ -83,8 +83,8 @@ class LatUni(markdown.extensions.Extension):
 
         # From here on out, HTML/Markdown treats any whitespace as being
         # a single space. Do the same here.
-        text = RE_WS.sub(" ", text).lstrip()
-        tail = RE_WS.sub(" ", tail).lstrip()
+        text = RE_WS.sub(" ", text)
+        tail = RE_WS.sub(" ", tail)
 
         if tag.lower() in header_tags:
             # For now just write the text with a newline after
